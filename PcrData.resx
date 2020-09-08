@@ -117,27 +117,62 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="textBox2.Text" xml:space="preserve">
-    <value>【每日更新】常见要求核酸码中转国（09/08更新欧洲转机三日核酸全覆盖） 
-https://forum.uscreditcardguide.com/t/topic/7485
-
-新冠疫情下，如何回国：中美直飞航班&amp;转机方案总结 
-https://www.uscreditcardguide.com/xinguanyiqingzhixiaruhehuiguo/
-
-【票帝指南】新加更多重点机场！转机时间够不够？常见机场最低转机时间
-https://piao.tips/minimum-connection-time-mct/
-
-各种被隔离 DP 等。
-
-采用 MIT 授权：
-Copyright 2020
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</value>
+  <data name="PCR" xml:space="preserve">
+    <value>国家,机场,名,时区,提前,状态
+埃塞俄比亚,ADD,亚的斯亚贝巴,E. Africa Standard Time,5,Y
+墨西哥,MEX,墨西哥城,Central Standard Time (Mexico),3,Y
+韩国,ICN,首尔,Korea Standard Time,3,Y
+韩国,CJU,济州,Korea Standard Time,3,Y
+马来西亚,KUL,吉隆坡,Singapore Standard Time,3,Y
+阿联酋,DXB,迪拜,Arabian Standard Time,3,Y
+阿联酋,AUH,阿布扎比,Arabian Standard Time,3,Y
+新加坡,SIN,新加坡,Singapore Standard Time,3,Y
+卡塔尔,DOH,卡塔尔,Arab Standard Time,3,Y
+菲律宾,MNL,马尼拉,Singapore Standard Time,3,Y
+伊朗,IKA,伊朗,Iran Standard Time,3,Y
+柬埔寨,PNH,金边,SE Asia Standard Time,3,Y
+柬埔寨,KOS,西哈努克,SE Asia Standard Time,3,Y
+越南,HAN,河内,SE Asia Standard Time,3,Y
+科威特,KWI,科威特,Arab Standard Time,3,Y
+泰国,BKK,曼谷,SE Asia Standard Time,3,Y
+法国,CDG,巴黎,Romance Standard Time,3,Y
+德国,FRA,法兰克福,W. Europe Standard Time,3,Y
+英国,LHR,伦敦,GMT Standard Time,3,Y
+荷兰,AMS,阿姆斯特丹,W. Europe Standard Time,3,Y
+俄罗斯,SVO,莫斯科,Russian Standard Time,3,Y
+瑞士,ZRH,苏黎世,W. Europe Standard Time,3,Y
+西班牙,MAD,马德里,Romance Standard Time,3,Y
+葡萄牙,LIS,里斯本,GMT Standard Time,3,Y
+丹麦,CPH,哥本哈根,Romance Standard Time,3,Y
+比利时,BRU,布鲁塞尔,Romance Standard Time,3,Y
+瑞典,ARN,斯德哥尔摩,W. Europe Standard Time,3,Y
+奥地利,VIE,维也纳,W. Europe Standard Time,3,Y
+芬兰,HEL,赫尔辛基,FLE Standard Time,3,Y
+希腊,ATH,雅典,GTB Standard Time,3,Y
+土耳其,IST,伊斯坦布尔,Turkey Standard Time,3,Y
+波兰,WAW,华沙,Central Europe Standard Time,3,Y
+白俄罗斯,MSQ,明斯克,Belarus Standard Time,3,Y
+塞尔维亚,BEG,贝尔格莱德,Central Europe Standard Time,3,Y
+埃及,CIA,开罗,Egypt Standard Time,3,Y
+新西兰,AKL,奥克兰,New Zealand Standard Time,3,Y
+加拿大,YVR,温哥华,Pacific Standard Time,3,9/9
+加拿大,YYZ,多伦多,Eastern Standard Time,3,9/9
+澳大利亚,SYD,悉尼,AUS Eastern Standard Time,3,9/11
+美国,SEA,西雅图,Pacific Standard Time,3,9/15
+美国,SFO,旧金山,Pacific Standard Time,3,9/15
+美国,LAX,洛杉矶,Pacific Standard Time,3,9/15
+美国,JFK,纽约,Eastern Standard Time,3,9/15
+美国,DTW,底特律,Eastern Standard Time,3,9/15
+美国,ATL,亚特兰大,Eastern Standard Time,3,9/15
+美国,ORD,芝加哥,Central Standard Time,3,9/15
+美国,SLC,盐湖城,Mountain Standard Time,3,9/15
+日本,NRT,东京成田,Tokyo Standard Time,,N
+日本,KIX,大阪,Tokyo Standard Time,,N
+日本,HND,东京羽田,Tokyo Standard Time,X,N
+沙特,RUH,利雅得,Arab Standard Time,,N
+意大利,MXP,米兰,W. Europe Standard Time,,N
+肯尼亚,NBO,内罗毕,E. Africa Standard Time,,N
+中国台湾,TPE,台北,Taipei Standard Time,X,N
+中国香港,HKG,香港,China Standard Time,X,N</value>
   </data>
-  <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
 </root>

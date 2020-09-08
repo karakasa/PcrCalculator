@@ -8,7 +8,7 @@ namespace PcrCalculator
 {
     public static class DomesticDataset
     {
-        public static readonly string[] DepartureCitys = new string[]
+        public static readonly string[] DepartureCities = new string[]
         {
             "JFK",
             "SEA",

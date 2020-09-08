@@ -50,8 +50,36 @@ namespace PcrCalculator
             new AirlineInterlineData("青岛航", "QW", new string[]{ }),
             new AirlineInterlineData("长龙", "GJ", new string[]{ }),
             new AirlineInterlineData("长荣", "BR", new string[]{ }),
-            new AirlineInterlineData("华航", "CI", new string[]{ })
+            new AirlineInterlineData("华航", "CI", new string[]{ }),
+            new AirlineInterlineData("葡航", "TP", new string[]{ })
         };
+
+        public static InterlineStatus GetIetState(string from, string to)
+        {
+            if (from == "??" || to == "??")
+                return InterlineStatus.LackOfData;
+
+            if (from == to)
+                return InterlineStatus.Ok;
+
+            for (var i = 0; i < InterlineData.Length; i++)
+            {
+                if (InterlineData[i].Code != from)
+                    continue;
+
+                foreach (var it in InterlineData[i].IET)
+                {
+                    if (it == to)
+                        return InterlineStatus.Ok;
+                    if (it == to + "*")
+                        return InterlineStatus.OkOutOfAlliance;
+                }
+
+                return InterlineStatus.UnknownOrNo;
+            }
+
+            return InterlineStatus.LackOfData;
+        }
     }
 
     public enum InterlineStatus
@@ -59,7 +87,6 @@ namespace PcrCalculator
         LackOfData,
         Ok,
         OkOutOfAlliance,
-        No,
-        Special
+        UnknownOrNo,
     }   
 }
