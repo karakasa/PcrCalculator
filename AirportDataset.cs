@@ -11,7 +11,6 @@ namespace PcrCalculator
         public string CountryName;
         public string Code;
         public string FriendlyName;
-        public TimeZoneInfo TimeZone;
         public int PCRInAdvance;
         public DateTime StartTime;
     }
@@ -19,6 +18,8 @@ namespace PcrCalculator
     {
         public static List<Airport> Airports = new List<Airport>();
         public static string[] AirportNames;
+
+        public static readonly DateTime DefaultTime = new DateTime(2020, 1, 1, 0, 0, 1);
         static AirportDataset()
         {
         }
@@ -35,17 +36,18 @@ namespace PcrCalculator
                         CountryName = content[0],
                         Code = it2,
                         FriendlyName = content[2],
-                        TimeZone = TimeZoneInfo.FindSystemTimeZoneById(content[3]),
                         PCRInAdvance = int.TryParse(content[4], out var advance) ? advance : -1,
-                        StartTime = content[4].Contains('/') ? GetStartTime(content[5]) : DateTime.Now
+                        StartTime = content[4].Contains('/') ? GetStartTime(content[5]) : DefaultTime
                     });
                 }
             }
 
+            Airports = Airports.OrderBy(a => a.Code).ToList();
+
             AirportNames = new string[Airports.Count];
             for (var i = 0; i < Airports.Count; i++)
             {
-                AirportNames[i] = $"{Airports[i].CountryName} {Airports[i].FriendlyName} ({Airports[i].Code})";
+                AirportNames[i] = $"{Airports[i].Code} {Airports[i].CountryName} {Airports[i].FriendlyName}";
             }
         }
 

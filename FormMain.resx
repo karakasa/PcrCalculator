@@ -127,10 +127,23 @@ https://www.uscreditcardguide.com/xinguanyiqingzhixiaruhehuiguo/
 【票帝指南】新加更多重点机场！转机时间够不够？常见机场最低转机时间
 https://piao.tips/minimum-connection-time-mct/
 
-各种被隔离 DP 等。
+疫情期间回国非联程机票常见问题之直挂行李和小机场出发
+https://www.uscreditcardguide.com/yiqingqijianhuiguofeilianchengjipiaochangjianwentizhizhiguaxinglihexiaojichangchufa/
+
+实施凭核酸检测阴性证明登机的常见问题解答
+http://www.china-embassy.org/chn/lszj/zytz/t1813257.htm
+
+各种被隔离 DP 等，部分数据采集自 ExpertFlyer (GDS) 系统。</value>
+  </data>
+  <data name="textBox3.Text" xml:space="preserve">
+    <value>请谨慎对待本软件的结果，本软件作者及参与方对因本软件错误信息导致的不能出行、滞留等不利情况概不负责。
+有什么不对的请在 GitHub 开 Issue。
+
+Repo 地址：
+https://github.com/karakasa/PcrCalculator
 
 采用 MIT 授权：
-Copyright 2020
+Copyright 2020 Karakasa
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.

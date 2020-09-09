@@ -30,8 +30,6 @@ namespace PcrCalculator
     }
     public class TripCheck
     {
-        public TimeZoneInfo TestTimeZone;
-
         public string EntryPoint = null;
         public string FinalDestination = null;
         public List<Segment> Segments = new List<Segment>();
@@ -188,7 +186,7 @@ namespace PcrCalculator
 
             if (BaggageCount > 0 && Status != RouteStatus.Invalid)
             {
-
+                var trouble = false;
                 AddMessage("");
 
                 foreach (var transfer in transfers)
@@ -204,23 +202,27 @@ namespace PcrCalculator
                     {
                         switch (AirlineDataset.GetIetState(transfer.ArrivalAirlineCode, transfer.DepartureAirlineCode))
                         {
-                            case InterlineStatus.LackOfData:
-                                message = "数据不足";
+                            case InterlineStatus.Unknown:
+                                message = "未知";
                                 break;
                             case InterlineStatus.Ok:
                                 message = "可行（联盟内）";
                                 break;
                             case InterlineStatus.OkOutOfAlliance:
-                                message = "理论上可行（联盟外）";
+                                message = "理论可行（联盟外）";
                                 break;
-                            case InterlineStatus.UnknownOrNo:
-                                message = "不可行 / 未知";
+                            case InterlineStatus.No:
+                                message = "不可行";
+                                trouble = true;
                                 break;
                         }
                     }
 
                     AddMessage(header + message);
                 }
+
+                if (trouble)
+                    AddMessage("请注意不可行不一定意味着一定不能直挂，有可能可以由地勤代捞行李或像边境部门求情。");
             }
         }
         private static readonly string[] AllowLongTransfer = new string[]
@@ -490,6 +492,9 @@ namespace PcrCalculator
             if (BaggageCount == 0)
                 return;
 
+            if (BaggageCount >= 3)
+                AddMessage("请注意 3+ 行李的超额行李费。");
+
             for (var i = 0; i < Segments.Count; i++)
             {
                 var from = Segments[i].DepartureAirport;
@@ -521,16 +526,10 @@ namespace PcrCalculator
         public int BaggageCount = 0;
         private void CheckPCRRequirement()
         {
-            if ((Segments[0].DepartureAirport == "NRT" || Segments[0].DepartureAirport == "KIX") && Segments.Count == 1)
-            {
-                AddMessage("日本始发仅需要 14 天连续打卡健康码。");
-                return;
-            }
-
             var required = false;
             var earliestSubmitTime = new DateTime(2020, 1, 1, 0, 0, 1);
 
-            foreach(var it in Segments)
+            foreach (var it in Segments)
             {
                 if (!AirportDataset.TryGetAirport(it.DepartureAirport, out var airport))
                     continue;
@@ -538,10 +537,9 @@ namespace PcrCalculator
                 if (airport.PCRInAdvance == -1 || airport.StartTime > it.LocalDepartureTime)
                     continue;
 
-                var localReportTime = it.LocalDepartureTime - new TimeSpan(airport.PCRInAdvance, 0, 0, 0);
-                var localEarliestTime = new DateTime(localReportTime.Year, localReportTime.Month, localReportTime.Day, 0, 0, 1);
+                var earliestTime = new DateTime(it.LocalDepartureTime.Year, it.LocalDepartureTime.Month,
+                    it.LocalDepartureTime.Day - airport.PCRInAdvance, 0, 0, 1);
 
-                var earliestTime = TimeZoneInfo.ConvertTime(localEarliestTime, airport.TimeZone, TestTimeZone);
                 if (earliestTime > earliestSubmitTime)
                 {
                     required = true;
@@ -551,13 +549,27 @@ namespace PcrCalculator
 
             if (required)
             {
-                if(earliestSubmitTime > Segments[0].LocalDepartureTime)
+                if (AirportInUS.Contains(Segments[0].DepartureAirport) && Segments[0].LocalDepartureTime < new DateTime(2020, 9, 15, 0, 0, 0)) {
+                    AddMessage("2020/09/15 前美国始发颁发的 5 日核酸码能否在 3 日地区使用不能确定。请尽量按 3 日的要求准备核酸码。本 APP 是按 3 日的要求计算的。");
+                }
+
+                if (earliestSubmitTime > Segments[0].LocalDepartureTime)
                 {
                     AddMessage("核酸报告时间无法赶上第一程航班。");
                     InvalidRoute();
                     return;
                 }
-                AddMessage("核酸码需要报告出具时间为 " + earliestSubmitTime.ToString("yyyy/MM/dd HH:mm") + " 后的报告。");
+
+                AddMessage("核酸码需要报告出具时间为 " + earliestSubmitTime.ToString("yyyy/MM/dd") + " 及以后的报告。");
+                if((Segments[0].LocalDepartureTime - earliestSubmitTime).TotalSeconds < 86400)
+                {
+                    SuspiciousRoute();
+                    AddMessage("报告出具时间到乘机不到 24 小时。有核酸码不能准时审核通过的风险。");
+                }
+            }
+            else
+            {
+                AddMessage("不需要核酸码，请注意打小飞机。");
             }
         }
     }

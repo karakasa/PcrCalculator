@@ -12,7 +12,6 @@ namespace PcrCalculator
 {
     public partial class FormMain : Form
     {
-        private TimeZoneInfo[] _timezones = TimeZoneInfo.GetSystemTimeZones().ToArray();
         public FormMain()
         {
             InitializeComponent();
@@ -43,7 +42,6 @@ namespace PcrCalculator
             AirportDataset.LoadData();
 
             PopulateAirportNames();
-            PopulateTimezones();
             PopulateEntryAndDestinations();
             PopulateAirlineList();
             comboBox10.SelectedIndex = 0;
@@ -79,17 +77,6 @@ namespace PcrCalculator
             UpdateTransfer();
         }
 
-        private void PopulateTimezones()
-        {
-            foreach (var it in _timezones)
-            {
-                var index = comboBox1.Items.Add(it.DisplayName);
-                if (it.StandardName == TimeZoneInfo.Local.StandardName)
-                {
-                    comboBox1.SelectedIndex = index;
-                }
-            }
-        }
 
         private void PopulateEntryAndDestinations()
         {
@@ -119,7 +106,7 @@ namespace PcrCalculator
 
         private void PopulateAirlineList()
         {
-            var list = Enumerable.Repeat("其他", 1).Concat(AirlineDataset.InterlineData.Select(it => $"{it.FriendlyName} ({it.Code})")).ToArray();
+            var list = Enumerable.Repeat("其他", 1).Concat(AirlineDataset.InterlineData.Select(it => $"{it.Code} {it.FriendlyName}")).ToArray();
             comboBox7.Items.AddRange(list);
             comboBox8.Items.AddRange(list);
             comboBox9.Items.AddRange(list);
@@ -139,7 +126,6 @@ namespace PcrCalculator
 
         private void LoadIntoTripCheck(TripCheck trip)
         {
-            trip.TestTimeZone = _timezones[comboBox1.SelectedIndex];
             trip.BaggageCount = comboBox10.SelectedIndex;
             trip.EntryPoint = comboBox5.SelectedItem.ToString();
             trip.FinalDestination = comboBox6.SelectedItem.ToString();

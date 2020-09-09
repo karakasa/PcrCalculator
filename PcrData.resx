@@ -167,9 +167,9 @@
 美国,ORD,芝加哥,Central Standard Time,3,9/15
 美国,DFW,达拉斯,Central Standard Time,3,9/15
 美国,SLC,盐湖城,Mountain Standard Time,3,9/15
-日本,NRT,东京成田,Tokyo Standard Time,,N
-日本,KIX,大阪,Tokyo Standard Time,,N
-日本,HND,东京羽田,Tokyo Standard Time,X,N
+日本,NRT,东京成田,Tokyo Standard Time,3,9/25
+日本,KIX,大阪,Tokyo Standard Time,3,9/25
+日本,HND,东京羽田,Tokyo Standard Time,3,9/25
 沙特,RUH,利雅得,Arab Standard Time,,N
 意大利,MXP,米兰,W. Europe Standard Time,,N
 肯尼亚,NBO,内罗毕,E. Africa Standard Time,,N
