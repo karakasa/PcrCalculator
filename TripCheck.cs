@@ -99,6 +99,42 @@ namespace PcrCalculator
                 }
             }
         }
+        private void CheckOtherDomesticTransfer()
+        {
+            for (var i = 0; i < Segments.Count - 1; i++)
+            {
+                var from = Segments[i].DepartureAirport;
+                var to = Segments[i + 1].DepartureAirport;
+
+                if (IsWithinSameCountry(from, to))
+                {
+                    InvalidRoute();
+                    AddMessage($"不允许 {from} -> {to} 的国内转机。");
+                    return;
+                }
+            }
+        }
+        private static readonly string[] AirportInJapan = new string[] { "NRT", "HND", "KIX" };
+        private static readonly string[] AirportInKorea = new string[] { "ICN", "CJU" };
+        private static readonly string[] AirportInUAE = new string[] { "DXB", "AUH" };
+        private static readonly string[] AirportInUS = new string[] { "SEA", "SFO", "LAX", "JFK", "DTW", "ATL", "ORD", "SLC", "DFW" };
+
+        private void CheckStartSegmentsInOneCountrry()
+        {
+            if (Segments.Count > 1 && IsWithinSameCountry(Segments[0].DepartureAirport, Segments[1].DepartureAirport))
+            {
+                AddMessage("请不要包含国内段航班，分析结果有可能有错。");
+                AddMessage("");
+            }
+        }
+        private static bool IsWithinSameCountry(string a, string b)
+        {
+            return
+                (AirportInJapan.Contains(a) && AirportInJapan.Contains(b))
+                || (AirportInKorea.Contains(a) && AirportInKorea.Contains(b))
+                || (AirportInUAE.Contains(a) && AirportInUAE.Contains(b))
+                || (AirportInUS.Contains(a) && AirportInUS.Contains(b));
+        }
         private void CheckCanadaTransfer()
         {
             // 直飞
@@ -113,7 +149,7 @@ namespace PcrCalculator
             if (Segments.Count == 2 && Segments[0].AirlineCode == "AC" && Segments[1].DepartureAirport == "YVR")
             {
                 var airline = Segments[1].AirlineCode;
-                if (airline == "AC" || airline == "CA" || airline == "MU" || airline == "CZ" || airline == "MF" || airline == "HU")
+                if (airline == "AC" || airline == "CA" || airline == "MU" || airline == "CZ" || airline == "MF" || airline == "HU" || airline == "3U")
                 {
                     AddMessage("初步判定无需签证即可在加拿大转机，请注意 CTP 的其他条件。");
                     return;
@@ -272,8 +308,8 @@ namespace PcrCalculator
             switch (transfer.Airport)
             {
                 case "YVR":
-                    if (!sameDay)
-                        AddMessage("非同日转机需在机场 Fairmont 有预订，并且不能离开机场。");
+                    if (!sameDay && transfer.LocalDepartureTime.Hour >= 4)
+                        AddMessage("过夜转机需在机场 Fairmont 有预订，并且不能离开机场。");
                     break;
                 case "SVO":
                     if(Segments.Count != 2 || transfer.DepartureAirlineCode != "SU"
@@ -404,7 +440,9 @@ namespace PcrCalculator
                 return;
 
             AddMessage("请注意，本工具并不会检查航线是否存在以及航线时间是否正确。");
+            AddMessage("");
 
+            CheckStartSegmentsInOneCountrry();
             CheckPCRRequirement();
             CheckPCRReportRequirement();
             CheckAa();
@@ -412,6 +450,7 @@ namespace PcrCalculator
             CheckTransfers();
             CheckCanadaTransfer();
             CheckSchengenTransfer();
+            CheckOtherDomesticTransfer();
             CheckLastDeparture();
             var msg = DomesticDataset.GetDestinationRegulation(EntryPoint, FinalDestination);
             if (!string.IsNullOrEmpty(msg))

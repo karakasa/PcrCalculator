@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.显示结果 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -60,11 +63,8 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.显示结果 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -120,6 +120,35 @@
             this.tabPage1.Text = "行程规划";
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(15, 259);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(651, 23);
+            this.label10.TabIndex = 23;
+            this.label10.Text = "请输入行程信息";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(15, 297);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(651, 134);
+            this.textBox1.TabIndex = 22;
+            // 
+            // 显示结果
+            // 
+            this.显示结果.Location = new System.Drawing.Point(535, 205);
+            this.显示结果.Name = "显示结果";
+            this.显示结果.Size = new System.Drawing.Size(131, 35);
+            this.显示结果.TabIndex = 21;
+            this.显示结果.Text = "显示结果";
+            this.显示结果.UseVisualStyleBackColor = true;
+            this.显示结果.Click += new System.EventHandler(this.显示结果_Click);
             // 
             // label7
             // 
@@ -401,40 +430,6 @@
             this.tabPage2.Text = "数据来源";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // 显示结果
-            // 
-            this.显示结果.Location = new System.Drawing.Point(535, 205);
-            this.显示结果.Name = "显示结果";
-            this.显示结果.Size = new System.Drawing.Size(131, 35);
-            this.显示结果.TabIndex = 21;
-            this.显示结果.Text = "显示结果";
-            this.显示结果.UseVisualStyleBackColor = true;
-            this.显示结果.Click += new System.EventHandler(this.显示结果_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(15, 297);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(651, 134);
-            this.textBox1.TabIndex = 22;
-            // 
-            // label10
-            // 
-            this.label10.Location = new System.Drawing.Point(15, 259);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(651, 23);
-            this.label10.TabIndex = 23;
-            this.label10.Text = "请输入行程信息";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(15, 15);
@@ -446,6 +441,11 @@
             this.textBox2.TabIndex = 23;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -456,7 +456,7 @@
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "回国小工具 20200908";
+            this.Text = "回国小工具 20200909";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
