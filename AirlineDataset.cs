@@ -85,7 +85,8 @@ namespace PcrCalculator
             new Airline("SC","山航",  new string[]{ }),
             new Airline("QW","青岛航",  new string[]{ }),
             new Airline("GJ","长龙",  new string[]{ }),
-            new Airline("IJ", "春秋日本", new string[]{ })
+            new Airline("IJ", "春秋日本", new string[]{ }),
+            new Airline("TW", "德威", new string[]{ }),
         }.OrderBy(a => a.Code).ToArray();
 
         private static bool InSameAlliance(string a, string b)

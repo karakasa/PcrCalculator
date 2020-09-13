@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.显示结果 = new System.Windows.Forms.Button();
@@ -59,12 +60,13 @@
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -84,6 +86,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.comboBox1);
             this.tabPage1.Controls.Add(this.label10);
             this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Controls.Add(this.显示结果);
@@ -111,6 +114,7 @@
             this.tabPage1.Controls.Add(this.comboBox3);
             this.tabPage1.Controls.Add(this.dateTimePicker1);
             this.tabPage1.Controls.Add(this.comboBox2);
+            this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -121,9 +125,18 @@
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(97, 12);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(570, 20);
+            this.comboBox1.TabIndex = 24;
+            // 
             // label10
             // 
-            this.label10.Location = new System.Drawing.Point(16, 205);
+            this.label10.Location = new System.Drawing.Point(16, 231);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(651, 23);
             this.label10.TabIndex = 23;
@@ -132,17 +145,17 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(16, 243);
+            this.textBox1.Location = new System.Drawing.Point(16, 269);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(651, 134);
+            this.textBox1.Size = new System.Drawing.Size(651, 109);
             this.textBox1.TabIndex = 22;
             // 
             // 显示结果
             // 
-            this.显示结果.Location = new System.Drawing.Point(526, 151);
+            this.显示结果.Location = new System.Drawing.Point(526, 177);
             this.显示结果.Name = "显示结果";
             this.显示结果.Size = new System.Drawing.Size(141, 35);
             this.显示结果.TabIndex = 21;
@@ -153,7 +166,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(524, 51);
+            this.label7.Location = new System.Drawing.Point(524, 77);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(77, 12);
             this.label7.TabIndex = 20;
@@ -162,7 +175,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(377, 51);
+            this.label6.Location = new System.Drawing.Point(377, 77);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(77, 12);
             this.label6.TabIndex = 20;
@@ -171,7 +184,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(253, 52);
+            this.label5.Location = new System.Drawing.Point(253, 78);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 12);
             this.label5.TabIndex = 20;
@@ -180,7 +193,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 52);
+            this.label3.Location = new System.Drawing.Point(14, 78);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 20;
@@ -191,7 +204,7 @@
             this.comboBox9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox9.FormattingEnabled = true;
             this.comboBox9.ItemHeight = 12;
-            this.comboBox9.Location = new System.Drawing.Point(255, 119);
+            this.comboBox9.Location = new System.Drawing.Point(255, 145);
             this.comboBox9.Name = "comboBox9";
             this.comboBox9.Size = new System.Drawing.Size(118, 20);
             this.comboBox9.TabIndex = 19;
@@ -201,7 +214,7 @@
             this.comboBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox8.FormattingEnabled = true;
             this.comboBox8.ItemHeight = 12;
-            this.comboBox8.Location = new System.Drawing.Point(255, 93);
+            this.comboBox8.Location = new System.Drawing.Point(255, 119);
             this.comboBox8.Name = "comboBox8";
             this.comboBox8.Size = new System.Drawing.Size(118, 20);
             this.comboBox8.TabIndex = 18;
@@ -211,7 +224,7 @@
             this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox7.FormattingEnabled = true;
             this.comboBox7.ItemHeight = 12;
-            this.comboBox7.Location = new System.Drawing.Point(255, 67);
+            this.comboBox7.Location = new System.Drawing.Point(255, 93);
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(118, 20);
             this.comboBox7.TabIndex = 17;
@@ -219,7 +232,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(16, 122);
+            this.checkBox2.Location = new System.Drawing.Point(16, 148);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(15, 14);
             this.checkBox2.TabIndex = 15;
@@ -229,7 +242,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(16, 96);
+            this.checkBox1.Location = new System.Drawing.Point(16, 122);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(15, 14);
             this.checkBox1.TabIndex = 14;
@@ -246,7 +259,7 @@
             "1",
             "2",
             "3+"});
-            this.comboBox10.Location = new System.Drawing.Point(443, 166);
+            this.comboBox10.Location = new System.Drawing.Point(443, 192);
             this.comboBox10.Name = "comboBox10";
             this.comboBox10.Size = new System.Drawing.Size(77, 20);
             this.comboBox10.TabIndex = 13;
@@ -257,7 +270,7 @@
             this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox6.FormattingEnabled = true;
             this.comboBox6.ItemHeight = 12;
-            this.comboBox6.Location = new System.Drawing.Point(255, 166);
+            this.comboBox6.Location = new System.Drawing.Point(255, 192);
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(182, 20);
             this.comboBox6.TabIndex = 13;
@@ -266,7 +279,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(441, 151);
+            this.label9.Location = new System.Drawing.Point(441, 177);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(65, 12);
             this.label9.TabIndex = 12;
@@ -276,7 +289,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(14, 151);
+            this.label8.Location = new System.Drawing.Point(14, 177);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 12);
             this.label8.TabIndex = 12;
@@ -286,7 +299,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(253, 151);
+            this.label4.Location = new System.Drawing.Point(253, 177);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(65, 12);
             this.label4.TabIndex = 12;
@@ -298,7 +311,7 @@
             this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox5.FormattingEnabled = true;
             this.comboBox5.ItemHeight = 12;
-            this.comboBox5.Location = new System.Drawing.Point(16, 166);
+            this.comboBox5.Location = new System.Drawing.Point(16, 192);
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(231, 20);
             this.comboBox5.TabIndex = 13;
@@ -309,7 +322,7 @@
             this.dateTimePicker6.CustomFormat = " yyyy/MM/dd HH:mm";
             this.dateTimePicker6.Enabled = false;
             this.dateTimePicker6.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker6.Location = new System.Drawing.Point(526, 118);
+            this.dateTimePicker6.Location = new System.Drawing.Point(526, 144);
             this.dateTimePicker6.Name = "dateTimePicker6";
             this.dateTimePicker6.Size = new System.Drawing.Size(141, 21);
             this.dateTimePicker6.TabIndex = 11;
@@ -318,7 +331,7 @@
             // 
             this.dateTimePicker3.CustomFormat = " yyyy/MM/dd HH:mm";
             this.dateTimePicker3.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker3.Location = new System.Drawing.Point(379, 118);
+            this.dateTimePicker3.Location = new System.Drawing.Point(379, 144);
             this.dateTimePicker3.Name = "dateTimePicker3";
             this.dateTimePicker3.Size = new System.Drawing.Size(141, 21);
             this.dateTimePicker3.TabIndex = 11;
@@ -328,7 +341,7 @@
             this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox4.FormattingEnabled = true;
             this.comboBox4.ItemHeight = 12;
-            this.comboBox4.Location = new System.Drawing.Point(40, 119);
+            this.comboBox4.Location = new System.Drawing.Point(40, 145);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(207, 20);
             this.comboBox4.TabIndex = 10;
@@ -337,7 +350,7 @@
             // 
             this.dateTimePicker5.CustomFormat = " yyyy/MM/dd HH:mm";
             this.dateTimePicker5.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker5.Location = new System.Drawing.Point(526, 92);
+            this.dateTimePicker5.Location = new System.Drawing.Point(526, 118);
             this.dateTimePicker5.Name = "dateTimePicker5";
             this.dateTimePicker5.Size = new System.Drawing.Size(141, 21);
             this.dateTimePicker5.TabIndex = 9;
@@ -346,7 +359,7 @@
             // 
             this.dateTimePicker2.CustomFormat = " yyyy/MM/dd HH:mm";
             this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker2.Location = new System.Drawing.Point(379, 92);
+            this.dateTimePicker2.Location = new System.Drawing.Point(379, 118);
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(141, 21);
             this.dateTimePicker2.TabIndex = 9;
@@ -355,7 +368,7 @@
             // 
             this.dateTimePicker4.CustomFormat = " yyyy/MM/dd HH:mm";
             this.dateTimePicker4.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker4.Location = new System.Drawing.Point(526, 66);
+            this.dateTimePicker4.Location = new System.Drawing.Point(526, 92);
             this.dateTimePicker4.Name = "dateTimePicker4";
             this.dateTimePicker4.Size = new System.Drawing.Size(141, 21);
             this.dateTimePicker4.TabIndex = 7;
@@ -365,7 +378,7 @@
             this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.ItemHeight = 12;
-            this.comboBox3.Location = new System.Drawing.Point(40, 93);
+            this.comboBox3.Location = new System.Drawing.Point(40, 119);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(207, 20);
             this.comboBox3.TabIndex = 8;
@@ -374,7 +387,7 @@
             // 
             this.dateTimePicker1.CustomFormat = " yyyy/MM/dd HH:mm";
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(379, 66);
+            this.dateTimePicker1.Location = new System.Drawing.Point(379, 92);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(141, 21);
             this.dateTimePicker1.TabIndex = 7;
@@ -384,15 +397,24 @@
             this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.ItemHeight = 12;
-            this.comboBox2.Location = new System.Drawing.Point(16, 67);
+            this.comboBox2.Location = new System.Drawing.Point(16, 93);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(231, 20);
             this.comboBox2.TabIndex = 6;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(77, 12);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "检测地时区：";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 20);
+            this.label2.Location = new System.Drawing.Point(14, 46);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(257, 12);
             this.label2.TabIndex = 5;
@@ -420,11 +442,6 @@
             this.textBox2.TabIndex = 23;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.textBox3);
@@ -446,6 +463,11 @@
             this.textBox3.TabIndex = 24;
             this.textBox3.Text = resources.GetString("textBox3.Text");
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -456,7 +478,7 @@
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "回国小工具 20200910";
+            this.Text = "回国小工具 20200913";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -506,6 +528,8 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label1;
     }
 }
 

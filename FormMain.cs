@@ -41,12 +41,27 @@ namespace PcrCalculator
         {
             AirportDataset.LoadData();
 
+            PopulateTimezones();
             PopulateAirportNames();
             PopulateEntryAndDestinations();
             PopulateAirlineList();
             comboBox10.SelectedIndex = 0;
 
             UpdateTransfer();
+        }
+
+        private readonly TimeZoneInfo[] _timezones = TimeZoneInfo.GetSystemTimeZones().ToArray();
+        private void PopulateTimezones()
+        {
+            var local = TimeZoneInfo.Local;
+            foreach (var it in _timezones)
+            {
+                var index = comboBox1.Items.Add(it.DisplayName);
+                if (local.DisplayName == it.DisplayName)
+                    comboBox1.SelectedIndex = index;
+            }
+            if (comboBox1.SelectedIndex == -1)
+                comboBox1.SelectedIndex = 0;
         }
 
         private void PopulateAirportNames()
@@ -118,6 +133,7 @@ namespace PcrCalculator
         {
             textBox1.Clear();
             var trip = new TripCheck();
+            trip.PcrTimezone = _timezones[comboBox1.SelectedIndex];
             LoadIntoTripCheck(trip);
             trip.Check();
             SetState(trip.Status);
@@ -141,14 +157,23 @@ namespace PcrCalculator
             }
         }
 
+        private static DateTime RegulateDateTime(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
+        }
         private void AddSegment(TripCheck trip, ComboBox departAirport, ComboBox airline, DateTimePicker depart, DateTimePicker arrival)
         {
+            var departTime = RegulateDateTime(depart.Value);
+            var arrivalTime = RegulateDateTime(arrival.Value);
+
+            //departTime.Kind
+
             trip.Segments.Add(new Segment()
             {
                 DepartureAirport = departAirport.SelectedIndex == 0 ? "?" : AirportDataset.Airports[departAirport.SelectedIndex - 1].Code,
                 AirlineCode = airline.SelectedIndex == 0 ? "??" : AirlineDataset.InterlineData[airline.SelectedIndex - 1].Code,
-                LocalDepartureTime = depart.Value,
-                LocalArrivalTime = arrival.Value
+                LocalDepartureTime = departTime,
+                LocalArrivalTime = arrivalTime
             });
         }
 

@@ -13,6 +13,7 @@ namespace PcrCalculator
         public string FriendlyName;
         public int PCRInAdvance;
         public DateTime StartTime;
+        public TimeZoneInfo TimeZone;
     }
     public static class AirportDataset
     {
@@ -36,8 +37,9 @@ namespace PcrCalculator
                         CountryName = content[0],
                         Code = it2,
                         FriendlyName = content[2],
+                        TimeZone = TimeZoneInfo.FindSystemTimeZoneById(content[3]),
                         PCRInAdvance = int.TryParse(content[4], out var advance) ? advance : -1,
-                        StartTime = content[4].Contains('/') ? GetStartTime(content[5]) : DefaultTime
+                        StartTime = content[5].Contains('/') ? GetStartTime(content[5]) : DefaultTime
                     });
                 }
             }

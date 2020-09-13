@@ -96,7 +96,7 @@ namespace PcrCalculator
 
             if (destination == "江浙沪皖" && entry == "上海 (PVG)")
             {
-                return "可在上海隔离 7 天后，回户籍地再集中隔离 7 天。";
+                return "可在上海隔离 3 天后，回户籍地再集中隔离 11 天；居住在上海本地的，可集中隔离 7 天后再居家隔离 7 天。";
             }
 
             return null;

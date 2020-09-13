@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,7 @@ namespace PcrCalculator
     }
     public class TripCheck
     {
+        public TimeZoneInfo PcrTimezone;
         public string EntryPoint = null;
         public string FinalDestination = null;
         public List<Segment> Segments = new List<Segment>();
@@ -99,12 +101,50 @@ namespace PcrCalculator
         }
         private void CheckOtherDomesticTransfer()
         {
-            for (var i = 0; i < Segments.Count - 1; i++)
+            var calculatedUs = false;
+
+            for (var i = 1; i < Segments.Count; i++)
+            {
+                if (AirportInUS.Contains(Segments[i].DepartureAirport))
+                {
+                    if (IsTransferForbiddenInUs(Segments[0].DepartureAirport))
+                    {
+                        InvalidRoute();
+                        AddMessage("14 天内到访过热点国家，不允许在美国转机。");
+                        return;
+                    }
+                    else
+                    {
+                        RequireVisa("美国签证");
+                        calculatedUs = true;
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 1; i < Segments.Count - 1; i++)
             {
                 var from = Segments[i].DepartureAirport;
                 var to = Segments[i + 1].DepartureAirport;
 
-                if (IsWithinSameCountry(from, to))
+                if (AirportInUS.Contains(from) || AirportInUS.Contains(to))
+                {
+                    if (!calculatedUs)
+                    {
+                        if (IsTransferForbiddenInUs(Segments[0].DepartureAirport))
+                        {
+                            InvalidRoute();
+                            AddMessage("14 天内到访过热点国家，不允许在美国转机。");
+                            return;
+                        }
+                        else
+                        {
+                            RequireVisa("美国签证");
+                            calculatedUs = true;
+                        }
+                    }
+                }
+                else if (IsWithinSameCountry(from, to))
                 {
                     InvalidRoute();
                     AddMessage($"不允许 {from} -> {to} 的国内转机。");
@@ -112,10 +152,16 @@ namespace PcrCalculator
                 }
             }
         }
+
+        private static bool IsTransferForbiddenInUs(string code) => SchengenAirport.Contains(code) || USForbiddenTransferOrigin.Contains(code);
         private static readonly string[] AirportInJapan = new string[] { "NRT", "HND", "KIX" };
         private static readonly string[] AirportInKorea = new string[] { "ICN", "CJU" };
         private static readonly string[] AirportInUAE = new string[] { "DXB", "AUH" };
         private static readonly string[] AirportInUS = new string[] { "SEA", "SFO", "LAX", "JFK", "DTW", "ATL", "ORD", "SLC", "DFW" };
+        private static readonly string[] USForbiddenTransferOrigin = new string[]
+        {
+            "IKA", "LHR", "GIG", "DUB"
+        };
 
         private void CheckStartSegmentsInOneCountrry()
         {
@@ -342,6 +388,13 @@ namespace PcrCalculator
                 case "KOS":
                     RequireVisa("柬埔寨商务签");
                     break;
+                case "HKG":
+                    if (transfer.ArrivalAirlineCode != transfer.DepartureAirlineCode || transfer.ArrivalAirlineCode != "CX")
+                    {
+                        InvalidRoute();
+                        AddMessage("不满足香港转机要求。");
+                    }
+                    break;
             }
         }
 
@@ -524,10 +577,23 @@ namespace PcrCalculator
         }
 
         public int BaggageCount = 0;
+        private static readonly TimeZoneInfo WestCoastTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         private void CheckPCRRequirement()
         {
+            if (Segments.Count == 1 
+                && AirportInJapan.Contains(Segments[0].DepartureAirport) 
+                && Segments[0].LocalDepartureTime >= new DateTime(2020, 9, 25, 0, 0, 1))
+            {
+                AddMessage("日本直飞无需提供核酸码/14天打卡健康码，但是需要提供在指定核酸测试机构的纸质测试报告，并需持复印件供航空公司留存。详情请参阅资源一栏。");
+                return;
+            }
+
             var required = false;
             var earliestSubmitTime = new DateTime(2020, 1, 1, 0, 0, 1);
+
+            var isUsOrigin = AirportInUS.Contains(Segments[0].DepartureAirport);
+            var hasOriginAirport = AirportDataset.TryGetAirport(Segments[0].DepartureAirport, out var originAirport);
+            var testTimezone = isUsOrigin ? WestCoastTimeZone : PcrTimezone;
 
             foreach (var it in Segments)
             {
@@ -537,8 +603,9 @@ namespace PcrCalculator
                 if (airport.PCRInAdvance == -1 || airport.StartTime > it.LocalDepartureTime)
                     continue;
 
-                var earliestTime = new DateTime(it.LocalDepartureTime.Year, it.LocalDepartureTime.Month,
-                    it.LocalDepartureTime.Day - airport.PCRInAdvance, 0, 0, 1);
+                var airportTimeInLocal = TimeZoneInfo.ConvertTime(it.LocalDepartureTime, airport.TimeZone, testTimezone);
+                var pcrTimeInLocal = airportTimeInLocal - new TimeSpan(airport.PCRInAdvance, 0, 0, 0);
+                var earliestTime = new DateTime(pcrTimeInLocal.Year, pcrTimeInLocal.Month, pcrTimeInLocal.Day, 0, 1, 0);
 
                 if (earliestTime > earliestSubmitTime)
                 {
@@ -548,23 +615,38 @@ namespace PcrCalculator
             }
 
             if (required)
-            {
-                if (AirportInUS.Contains(Segments[0].DepartureAirport) && Segments[0].LocalDepartureTime < new DateTime(2020, 9, 15, 0, 0, 0)) {
-                    AddMessage("2020/09/15 前美国始发颁发的 5 日核酸码能否在 3 日地区使用不能确定。请尽量按 3 日的要求准备核酸码。本 APP 是按 3 日的要求计算的。");
+            { 
+                if (AirportInUS.Contains(Segments[0].DepartureAirport) && Segments[0].LocalDepartureTime < new DateTime(2020, 9, 15, 0, 0, 0))
+                {
+                    AddMessage("2020/09/15 前美国始发颁发的 5 日核酸码只要有效，就可以在 3 日核酸码地区转机。但是部分机场（比如韩国）可能会额外要求 3 日内核酸报告。");
                 }
 
-                if (earliestSubmitTime > Segments[0].LocalDepartureTime)
+                AddMessage("核酸码需要报告出具当地时间为 " + earliestSubmitTime.ToString("yyyy/MM/dd") + " 及以后的报告。");
+                if (isUsOrigin)
                 {
-                    AddMessage("核酸报告时间无法赶上第一程航班。");
-                    InvalidRoute();
-                    return;
+                    AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。");
                 }
 
-                AddMessage("核酸码需要报告出具时间为 " + earliestSubmitTime.ToString("yyyy/MM/dd") + " 及以后的报告。");
-                if((Segments[0].LocalDepartureTime - earliestSubmitTime).TotalSeconds < 86400)
+                if (hasOriginAirport)
                 {
-                    SuspiciousRoute();
-                    AddMessage("报告出具时间到乘机不到 24 小时。有核酸码不能准时审核通过的风险。");
+                    earliestSubmitTime = TimeZoneInfo.ConvertTime(earliestSubmitTime, PcrTimezone, originAirport.TimeZone);
+
+                    if (earliestSubmitTime > Segments[0].LocalDepartureTime)
+                    {
+                        AddMessage("核酸报告时间无法赶上第一程航班。");
+                        InvalidRoute();
+                        return;
+                    }
+
+                    if ((Segments[0].LocalDepartureTime - earliestSubmitTime).TotalSeconds < 86400)
+                    {
+                        SuspiciousRoute();
+                        AddMessage("报告出具时间到乘机不到 24 小时。有核酸码不能准时审核通过的风险。");
+                    }
+                }
+                else
+                {
+                    AddMessage("出发机场未知，无法判定核酸报告时间情况。");
                 }
             }
             else
