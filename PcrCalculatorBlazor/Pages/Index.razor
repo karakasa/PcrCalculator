@@ -1,0 +1,208 @@
+﻿@page "/"
+@using MatBlazor
+@using PcrCalculatorLib
+
+<h1>行程规划</h1>
+<hr>
+<label for="timeZone">检测地时区</label>
+<select id="timeZone" @bind="@selectedTimeZone">
+    @for (int i = 0; i < _timezones.Length; i++)
+    {
+        @if (TimeZoneInfo.Local.DisplayName == _timezones[i].DisplayName)
+        {
+            defaultTimeZone = i;
+            <option value="@i" selected>@_timezones[i].DisplayName</option>
+        }
+        else
+        {
+            <option value="@i">@_timezones[i].DisplayName</option>
+        }
+
+    }
+</select>
+<br>
+<br>
+<p>航班信息（从离开所在国的第一程航班开始）：</p>
+<hr>
+<label for="deptAirport1">出发机场</label>
+<select id="deptAirport1" @bind="@deptAirport1">
+    <option value="0" selected>其他</option>
+    @for (int i = 0; i < AirportNames.Length; i++)
+    {
+        <option value="@(i+1)">@AirportNames[i]</option>
+    }
+</select>
+<br>
+<label for="Airline1">航空公司</label>
+<select id="Airline1" @bind="@airline1">
+    @for (int i = 0; i < AirlineList.Length; i++)
+    {
+        <option value="@i">@AirlineList[i]</option>
+    }
+</select>
+<br>
+<p>当地出发时间</p>
+<MatDatePicker @bind-Value="deptTime1" EnableTime="true"></MatDatePicker>
+<br>
+<p>当地到达时间</p>
+<MatDatePicker @bind-Value="arrTime1" EnableTime="true"></MatDatePicker>
+<br>
+<br>
+<hr>
+<label for="POE">入境口岸</label>
+<select id="POE" @bind="@selectedEntryPoint">
+    @foreach (var data in DomesticDataset.EntryPoints)
+    {
+        <option>@data</option>
+    }
+</select>
+<br>
+<label for="FinDest">最终目的地</label>
+<select id="FinDest" @bind="@selectedFinalDestination">
+    @foreach (var data in DomesticDataset.FinalDestinations)
+    {
+        <option>@data</option>
+    }
+</select>
+<br>
+<label for="FinDest">托运行李数</label>
+<select id="BagCount" @bind="@selectedBaggage">
+    <option>0</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3+</option>
+</select>
+<br>
+<br>
+<button class="btn btn-primary" @onclick="getResult">显示结果</button>
+<br>
+<br>
+<h1>@resultState</h1>
+<hr>
+@foreach(var message in result)
+{
+    <p>@message</p>
+}
+
+
+
+@code {
+    private string selectedTimeZone;
+    private int defaultTimeZone;
+
+    private string deptAirport1;
+    private string airline1;
+    private DateTime? deptTime1 = new DateTime(2020, 9, 1);
+    private DateTime? arrTime1 = new DateTime(2020, 9, 1);
+
+    private string selectedEntryPoint;
+    private string selectedFinalDestination;
+    private string selectedBaggage;
+
+    private string resultState = "";
+    private List<string> result = new List<string>();
+
+    private readonly TimeZoneInfo[] _timezones = TimeZoneInfo.GetSystemTimeZones().ToArray();
+
+    private string[] AirportNames
+    {
+        get
+        {
+            if (AirportDataset.AirportNames == null)
+                AirportDataset.LoadData();
+            return AirportDataset.AirportNames;
+        }
+    }
+
+    private string[] airlineList = null;
+    private string[] AirlineList
+    {
+        get
+        {
+            if (airlineList == null)
+            {
+                airlineList = Enumerable.Repeat("其他", 1).Concat(AirlineDataset.InterlineData.Select(it => $"{it.Code} {it.FriendlyName}")).ToArray();
+            }
+            return airlineList;
+        }
+    }
+
+
+    void getResult()
+    {
+        result = new List<string>();
+        resultState = "";
+        var trip = new TripCheck();
+        if (int.TryParse(selectedTimeZone, out int timeValue))
+        {
+            trip.PcrTimezone = _timezones[timeValue];
+        }
+        else
+        {
+            trip.PcrTimezone = _timezones[defaultTimeZone];
+        }
+        if (String.IsNullOrEmpty(selectedBaggage))
+        {
+            trip.BaggageCount = 0;
+        }
+        else if (int.TryParse(selectedBaggage, out int value))
+        {
+            trip.BaggageCount = value;
+        }
+        else
+        {
+            trip.BaggageCount = 3;
+        }
+        trip.EntryPoint = String.IsNullOrEmpty(selectedEntryPoint) ? DomesticDataset.EntryPoints[0] : selectedEntryPoint;
+        trip.FinalDestination = String.IsNullOrEmpty(selectedFinalDestination) ? DomesticDataset.FinalDestinations[0] : selectedFinalDestination;
+
+        AddSegment(trip, deptAirport1, airline1, deptTime1, arrTime1);
+        trip.Check();
+        SetState(trip.Status);
+        result = trip.Messages;
+    }
+
+    private void SetState(RouteStatus status)
+    {
+        switch (status)
+        {
+            case RouteStatus.Pass:
+                //label10.BackColor = Color.LawnGreen;
+                //label10.ForeColor = Color.Black;
+                resultState = "可以成行";
+                break;
+            case RouteStatus.AdditionalDocument:
+                //label10.BackColor = Color.SkyBlue;
+                //label10.ForeColor = Color.Black;
+                resultState = "需要额外旅行文件";
+                break;
+            case RouteStatus.Suspicious:
+                //label10.BackColor = Color.Yellow;
+                //label10.ForeColor = Color.Black;
+                resultState = "可疑";
+                break;
+            case RouteStatus.Invalid:
+                //label10.BackColor = Color.Red;
+                //label10.ForeColor = Color.White;
+                resultState = "无法成行";
+                break;
+        }
+    }
+
+    private void AddSegment(TripCheck trip, string departAirport, string airline, DateTime? depart, DateTime? arrival)
+    {
+        var departTime = depart.Value.ToLocalTime();
+        var arrivalTime = arrival.Value.ToLocalTime();
+        
+        departTime = DateTime.SpecifyKind(departTime, DateTimeKind.Unspecified);
+        arrivalTime = DateTime.SpecifyKind(arrivalTime, DateTimeKind.Unspecified);
+        
+        trip.Segments.Add(new Segment()
+        {
+            DepartureAirport = (String.IsNullOrEmpty(departAirport) || departAirport == "0") ? "?" : AirportDataset.Airports[Int32.Parse(departAirport) - 1].Code,
+            AirlineCode = (String.IsNullOrEmpty(airline) || airline == "0") ? "??" : AirlineDataset.InterlineData[Int32.Parse(airline) - 1].Code,
+            LocalDepartureTime = departTime,
+            LocalArrivalTime = arrivalTime
+        });
+    }
+}

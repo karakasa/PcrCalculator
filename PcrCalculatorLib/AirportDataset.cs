@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TimeZoneConverter;
 
-namespace PcrCalculator
+namespace PcrCalculatorLib
 {
     public struct Airport
     {
@@ -37,7 +38,7 @@ namespace PcrCalculator
                         CountryName = content[0],
                         Code = it2,
                         FriendlyName = content[2],
-                        TimeZone = TimeZoneInfo.FindSystemTimeZoneById(content[3]),
+                        TimeZone = TZConvert.GetTimeZoneInfo(content[3]),
                         PCRInAdvance = int.TryParse(content[4], out var advance) ? advance : -1,
                         StartTime = content[5].Contains('/') ? GetStartTime(content[5]) : DefaultTime
                     });

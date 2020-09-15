@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PcrCalculator
+namespace PcrCalculatorLib
 {
     public struct Segment
     {
@@ -577,7 +577,8 @@ namespace PcrCalculator
         }
 
         public int BaggageCount = 0;
-        private static readonly TimeZoneInfo WestCoastTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+        private static readonly TimeZoneInfo WestCoastTimeZone = TimeZoneConverter.TZConvert.GetTimeZoneInfo("Pacific Standard Time");
+
         private void CheckPCRRequirement()
         {
             if (Segments.Count == 1 
