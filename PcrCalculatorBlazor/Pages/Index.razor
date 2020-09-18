@@ -1,87 +1,122 @@
 ﻿@page "/"
 @using MatBlazor
 @using PcrCalculatorLib
+@using TimeZoneNames
 
 <h1>行程规划</h1>
 <hr>
+<div class="alert alert-secondary mt-4" role="alert">
+    <span class="oi oi-warning mr-2" aria-hidden="true"></span>
+    <strong>本工具仅供参考</strong>
+
+    <span class="text-nowrap">
+        使用前请务必查看
+        <a target="_blank" class="font-weight-bold" href="source">数据来源</a>
+    </span>
+    <span class="text-nowrap">
+        和
+        <a target="_blank" class="font-weight-bold" href="about">关于</a>
+    </span>
+    页面。
+</div>
 <label for="timeZone">检测地时区</label>
 <select id="timeZone" @bind="@selectedTimeZone">
     @for (int i = 0; i < _timezones.Length; i++)
     {
-        @if (TimeZoneInfo.Local.DisplayName == _timezones[i].DisplayName)
+        @if (TimeZoneInfo.Local.DisplayName == _timezones[i].Key.DisplayName)
         {
             defaultTimeZone = i;
-            <option value="@i" selected>@_timezones[i].DisplayName</option>
+            <option value="@i" selected>@_timezones[i].Value</option>
         }
         else
         {
-            <option value="@i">@_timezones[i].DisplayName</option>
+            <option value="@i">@_timezones[i].Value</option>
         }
 
     }
 </select>
 <br>
 <br>
-<p>航班信息（从离开所在国的第一程航班开始）：</p>
-<hr>
-<label for="deptAirport1">出发机场</label>
-<select id="deptAirport1" @bind="@deptAirport1">
-    <option value="0" selected>其他</option>
-    @for (int i = 0; i < AirportNames.Length; i++)
+<label for="segCnt">回国航班航段数</label>
+<select id="segCnt" @bind="@segmentCount">
+    @for (int i = 1; i < 4; i++)
     {
-        <option value="@(i+1)">@AirportNames[i]</option>
+        <option value="@i">@i</option>
     }
 </select>
 <br>
-<label for="Airline1">航空公司</label>
-<select id="Airline1" @bind="@airline1">
-    @for (int i = 0; i < AirlineList.Length; i++)
-    {
-        <option value="@i">@AirlineList[i]</option>
-    }
-</select>
 <br>
-<p>当地出发时间</p>
-<MatDatePicker @bind-Value="deptTime1" EnableTime="true"></MatDatePicker>
-<br>
-<p>当地到达时间</p>
-<MatDatePicker @bind-Value="arrTime1" EnableTime="true"></MatDatePicker>
-<br>
-<br>
-<hr>
-<label for="POE">入境口岸</label>
-<select id="POE" @bind="@selectedEntryPoint">
-    @foreach (var data in DomesticDataset.EntryPoints)
-    {
-        <option>@data</option>
-    }
-</select>
-<br>
-<label for="FinDest">最终目的地</label>
-<select id="FinDest" @bind="@selectedFinalDestination">
-    @foreach (var data in DomesticDataset.FinalDestinations)
-    {
-        <option>@data</option>
-    }
-</select>
-<br>
-<label for="FinDest">托运行李数</label>
-<select id="BagCount" @bind="@selectedBaggage">
-    <option>0</option>
-    <option>1</option>
-    <option>2</option>
-    <option>3+</option>
-</select>
-<br>
-<br>
-<button class="btn btn-primary" @onclick="getResult">显示结果</button>
-<br>
-<br>
-<h1>@resultState</h1>
-<hr>
-@foreach(var message in result)
+@if (segmentCount > 0)
 {
-    <p>@message</p>
+    <p>航班信息（从离开所在国的第一程航班开始）：</p>
+
+    @for (int seg = 0; seg < segmentCount; seg++)
+    {
+        int local = seg;
+        <hr>
+        <p>@("第"+(local+1).ToString()+"程")</p>
+        <label for=@("deptAirport"+local)>出发机场</label>
+        <select id=@("deptAirport"+local) @bind="@deptAirport[local]">
+            <option value="0" selected>其他</option>
+            @for (int i = 0; i < AirportNames.Length; i++)
+            {
+                <option value="@(i+1)">@AirportNames[i]</option>
+            }
+        </select>
+        <br>
+        <label for=@("Airline"+local)>航空公司</label>
+        <select id=@("Airline"+local) @bind="@airline[local]">
+            @for (int i = 0; i < AirlineList.Length; i++)
+            {
+                <option value="@i">@AirlineList[i]</option>
+            }
+        </select>
+        <br>
+        <p>当地出发时间</p>
+        <MatDatePicker @bind-Value="deptTime[local]" EnableTime="true"></MatDatePicker>
+        <br>
+        <p>当地到达时间</p>
+        <MatDatePicker @bind-Value="arrTime[local]" EnableTime="true"></MatDatePicker>
+        <br>
+        <br>
+    }
+
+    <hr>
+    <label for="POE">入境口岸</label>
+    <select id="POE" @bind="@selectedEntryPoint">
+        @foreach (var data in DomesticDataset.EntryPoints)
+        {
+            <option>@data</option>
+        }
+    </select>
+    <br>
+    <label for="FinDest">最终目的地</label>
+    <select id="FinDest" @bind="@selectedFinalDestination">
+        @foreach (var data in DomesticDataset.FinalDestinations)
+        {
+            <option>@data</option>
+        }
+    </select>
+    <br>
+    <label for="FinDest">托运行李数</label>
+    <select id="BagCount" @bind="@selectedBaggage">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3+</option>
+    </select>
+    <br>
+    <br>
+    <button class="btn btn-primary" @onclick="getResult">显示结果</button>
+    <br>
+    <br>
+    <h1>@resultState</h1>
+    <hr>
+    @foreach (var message in result)
+    {
+        <p>@message</p>
+    }
+
 }
 
 
@@ -90,10 +125,12 @@
     private string selectedTimeZone;
     private int defaultTimeZone;
 
-    private string deptAirport1;
-    private string airline1;
-    private DateTime? deptTime1 = new DateTime(2020, 9, 1);
-    private DateTime? arrTime1 = new DateTime(2020, 9, 1);
+    private int segmentCount = -1;
+
+    private string[] deptAirport = new string[3];
+    private string[] airline = new string[3];
+    private DateTime?[] deptTime = new DateTime?[] { new DateTime(2020, 9, 1), new DateTime(2020, 9, 1), new DateTime(2020, 9, 1) };
+    private DateTime?[] arrTime = new DateTime?[] { new DateTime(2020, 9, 1), new DateTime(2020, 9, 1), new DateTime(2020, 9, 1) };
 
     private string selectedEntryPoint;
     private string selectedFinalDestination;
@@ -102,7 +139,7 @@
     private string resultState = "";
     private List<string> result = new List<string>();
 
-    private readonly TimeZoneInfo[] _timezones = TimeZoneInfo.GetSystemTimeZones().ToArray();
+    private readonly KeyValuePair<TimeZoneInfo,string>[] _timezones = TimeZoneInfo.GetSystemTimeZones().Select(zone => new KeyValuePair<TimeZoneInfo, string>(zone, TZNames.GetDisplayNameForTimeZone(zone.DisplayName, "zh-CN"))).GroupBy(pair => pair.Value).Select(p => p.First()).OrderBy(info => info.Value).ToArray();
 
     private string[] AirportNames
     {
@@ -135,11 +172,11 @@
         var trip = new TripCheck();
         if (int.TryParse(selectedTimeZone, out int timeValue))
         {
-            trip.PcrTimezone = _timezones[timeValue];
+            trip.PcrTimezone = _timezones[timeValue].Key;
         }
         else
         {
-            trip.PcrTimezone = _timezones[defaultTimeZone];
+            trip.PcrTimezone = _timezones[defaultTimeZone].Key;
         }
         if (String.IsNullOrEmpty(selectedBaggage))
         {
@@ -156,7 +193,11 @@
         trip.EntryPoint = String.IsNullOrEmpty(selectedEntryPoint) ? DomesticDataset.EntryPoints[0] : selectedEntryPoint;
         trip.FinalDestination = String.IsNullOrEmpty(selectedFinalDestination) ? DomesticDataset.FinalDestinations[0] : selectedFinalDestination;
 
-        AddSegment(trip, deptAirport1, airline1, deptTime1, arrTime1);
+        for (int i = 0; i< segmentCount; i++)
+        {
+            AddSegment(trip, deptAirport[i], airline[i], deptTime[i], arrTime[i]);
+        }
+
         trip.Check();
         SetState(trip.Status);
         result = trip.Messages;
