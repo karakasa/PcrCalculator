@@ -14,10 +14,6 @@ jobs:
           with:
             dotnet-version: 3.1.x
 
-        # Run tests
-        - name: Test
-          run: dotnet test
-
         # Generate the website
         - name: Publish
           run: dotnet publish PcrCalculatorBlazor/PcrCalculatorBlazor.csproj --configuration Release
