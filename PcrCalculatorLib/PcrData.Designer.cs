@@ -62,7 +62,7 @@ namespace PcrCalculatorLib {
         
         /// <summary>
         ///   Looks up a localized string similar to 国家,机场,名,时区,提前,状态
-        ///埃塞俄比亚,ADD,亚的斯亚贝巴,E. Africa Standard Time,5,Y
+        ///埃塞俄比亚,ADD,亚的斯亚贝巴,E. Africa Standard Time,3,Y
         ///墨西哥,MEX,墨西哥城,Central Standard Time (Mexico),3,Y
         ///韩国,ICN,首尔,Korea Standard Time,3,Y
         ///韩国,CJU,济州,Korea Standard Time,3,Y

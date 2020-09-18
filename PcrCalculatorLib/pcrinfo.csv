@@ -1,5 +1,5 @@
 ﻿国家,机场,名,时区,提前,状态
-埃塞俄比亚,ADD,亚的斯亚贝巴,E. Africa Standard Time,5,Y
+埃塞俄比亚,ADD,亚的斯亚贝巴,E. Africa Standard Time,3,Y
 墨西哥,MEX,墨西哥城,Central Standard Time (Mexico),3,Y
 韩国,ICN,首尔,Korea Standard Time,3,Y
 韩国,CJU,济州,Korea Standard Time,3,Y
@@ -45,6 +45,7 @@
 美国,DTW,底特律,Eastern Standard Time,3,9/15
 美国,ATL,亚特兰大,Eastern Standard Time,3,9/15
 美国,ORD,芝加哥,Central Standard Time,3,9/15
+美国,DFW,达拉斯,Central Standard Time,3,9/15
 美国,SLC,盐湖城,Mountain Standard Time,3,9/15
 日本,NRT,东京成田,Tokyo Standard Time,,N
 日本,KIX,大阪,Tokyo Standard Time,,N
@@ -54,3 +55,6 @@
 肯尼亚,NBO,内罗毕,E. Africa Standard Time,,N
 中国台湾,TPE,台北,Taipei Standard Time,X,N
 中国香港,HKG,香港,China Standard Time,X,N
+卢旺达,KGL,基加利,South Africa Standard Time,3,Y
+南非,JNB,约翰内斯堡,South Africa Standard Time,3,Y
+印度,DEL,新德里,India Standard Time,3,Y

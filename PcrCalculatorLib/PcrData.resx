@@ -119,7 +119,7 @@
   </resheader>
   <data name="PCR" xml:space="preserve">
     <value>国家,机场,名,时区,提前,状态
-埃塞俄比亚,ADD,亚的斯亚贝巴,E. Africa Standard Time,5,Y
+埃塞俄比亚,ADD,亚的斯亚贝巴,E. Africa Standard Time,3,Y
 墨西哥,MEX,墨西哥城,Central Standard Time (Mexico),3,Y
 韩国,ICN,首尔,Korea Standard Time,3,Y
 韩国,CJU,济州,Korea Standard Time,3,Y
@@ -167,15 +167,16 @@
 美国,ORD,芝加哥,Central Standard Time,3,9/15
 美国,DFW,达拉斯,Central Standard Time,3,9/15
 美国,SLC,盐湖城,Mountain Standard Time,3,9/15
-日本,NRT,东京成田,Tokyo Standard Time,3,9/25
-日本,KIX,大阪,Tokyo Standard Time,3,9/25
-日本,HND,东京羽田,Tokyo Standard Time,3,9/25
+日本,NRT,东京成田,Tokyo Standard Time,,N
+日本,KIX,大阪,Tokyo Standard Time,,N
+日本,HND,东京羽田,Tokyo Standard Time,X,N
 沙特,RUH,利雅得,Arab Standard Time,,N
 意大利,MXP,米兰,W. Europe Standard Time,,N
 肯尼亚,NBO,内罗毕,E. Africa Standard Time,,N
 中国台湾,TPE,台北,Taipei Standard Time,X,N
 中国香港,HKG,香港,China Standard Time,X,N
-巴西,GIG,里约热内卢,E. South America Standard Time,,N
-爱尔兰,DUB,都柏林,GMT Standard Time,,N</value>
+卢旺达,KGL,基加利,South Africa Standard Time,3,Y
+南非,JNB,约翰内斯堡,South Africa Standard Time,3,Y
+印度,DEL,新德里,India Standard Time,3,Y</value>
   </data>
 </root>
