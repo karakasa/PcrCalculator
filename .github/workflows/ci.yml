@@ -17,7 +17,7 @@ jobs:
         # Generate the website
         - name: Publish
           run: |
-            cp wwwroot/index.html wwwroot/404.html
+            cp index.html 404.html
             dotnet publish PcrCalculatorBlazor/PcrCalculatorBlazor.csproj --configuration Release
 
         # Publish the website
