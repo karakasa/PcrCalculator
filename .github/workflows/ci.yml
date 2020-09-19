@@ -16,9 +16,9 @@ jobs:
 
         # Generate the website
         - name: Publish
-          run: |
-            cp PcrCalculatorBlazor/bin/Release/netstandard2.1/publish/wwwroot/index.html PcrCalculatorBlazor/bin/Release/netstandard2.1/publish/wwwroot/404.html
+          run:
             dotnet publish PcrCalculatorBlazor/PcrCalculatorBlazor.csproj --configuration Release
+            cp PcrCalculatorBlazor/bin/Release/netstandard2.1/publish/wwwroot/index.html PcrCalculatorBlazor/bin/Release/netstandard2.1/publish/wwwroot/404.html
 
         # Publish the website
         - name: GitHub Pages action
