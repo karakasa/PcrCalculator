@@ -595,7 +595,7 @@ namespace PcrCalculatorLib
             if (Status == RouteStatus.Invalid)
                 return;
 
-            CheckPCRRequirement(true);
+            CheckPCRRequirementSimple();
             CheckPCRReportRequirement();
         }
         public void SetSegmentSimple(string airport, DateTime departureTime)
@@ -690,7 +690,38 @@ namespace PcrCalculatorLib
         public int BaggageCount = 0;
         private static readonly TimeZoneInfo WestCoastTimeZone = TimeZoneConverter.TZConvert.GetTimeZoneInfo("Pacific Standard Time");
 
-        private void CheckPCRRequirement(bool simple = false)
+        private void CheckPCRRequirementSimple()
+        {
+            var required = false;
+            var earliestSubmitTime = new DateTime(2020, 1, 1, 0, 0, 1);
+            var testTimezone = WestCoastTimeZone;
+
+            var it = Segments.Last();
+            if (AirportDataset.TryGetAirport(it.DepartureAirport, out var airport) 
+                && airport.PCRInAdvance != -1 && airport.StartTime <= it.LocalDepartureTime)
+            {
+                var airportTimeInLocal = TimeZoneInfo.ConvertTime(it.LocalDepartureTime, airport.TimeZone, testTimezone);
+                var pcrTimeInLocal = airportTimeInLocal - new TimeSpan(airport.PCRInAdvance, 0, 0, 0);
+                var earliestTime = new DateTime(pcrTimeInLocal.Year, pcrTimeInLocal.Month, pcrTimeInLocal.Day, 0, 1, 0);
+
+                if (earliestTime > earliestSubmitTime)
+                {
+                    required = true;
+                    earliestSubmitTime = earliestTime;
+                }
+            }
+
+            if (required)
+            {
+                AddMessage("核酸码需要报告出具当地时间为 " + earliestSubmitTime.ToString("yyyy/MM/dd") + " 及以后的报告。");
+                AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。");
+            }
+            else
+            {
+                AddMessage("请使用高级版本积算结果。");
+            }
+        }
+        private void CheckPCRRequirement()
         {
             if (Segments.Count == 1 
                 && AirportInJapan.Contains(Segments[0].DepartureAirport) 
@@ -727,7 +758,7 @@ namespace PcrCalculatorLib
             }
 
             if (required)
-            { 
+            {
                 if (AirportInUS.Contains(Segments[0].DepartureAirport) && Segments[0].LocalDepartureTime < new DateTime(2020, 9, 15, 0, 0, 0))
                 {
                     AddMessage("2020/09/15 前美国始发颁发的 5 日核酸码只要有效，就可以在 3 日核酸码地区转机。但是部分机场（比如韩国）可能会额外要求 3 日内核酸报告。");
@@ -739,29 +770,26 @@ namespace PcrCalculatorLib
                     AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。");
                 }
 
-                if (!simple)
+                if (hasOriginAirport)
                 {
-                    if (hasOriginAirport)
-                    {
-                        earliestSubmitTime = TimeZoneInfo.ConvertTime(earliestSubmitTime, PcrTimezone, originAirport.TimeZone);
+                    earliestSubmitTime = TimeZoneInfo.ConvertTime(earliestSubmitTime, PcrTimezone, originAirport.TimeZone);
 
-                        if (earliestSubmitTime > Segments[0].LocalDepartureTime)
-                        {
-                            AddMessage("核酸报告时间无法赶上第一程航班。");
-                            InvalidRoute();
-                            return;
-                        }
-
-                        if ((Segments[0].LocalDepartureTime - earliestSubmitTime).TotalSeconds < 86400)
-                        {
-                            SuspiciousRoute();
-                            AddMessage("报告出具时间到乘机不到 24 小时。有核酸码不能准时审核通过的风险。");
-                        }
-                    }
-                    else
+                    if (earliestSubmitTime > Segments[0].LocalDepartureTime)
                     {
-                        AddMessage("出发机场未知，无法判定核酸报告时间情况。");
+                        AddMessage("核酸报告时间无法赶上第一程航班。");
+                        InvalidRoute();
+                        return;
                     }
+
+                    if ((Segments[0].LocalDepartureTime - earliestSubmitTime).TotalSeconds < 86400)
+                    {
+                        SuspiciousRoute();
+                        AddMessage("报告出具时间到乘机不到 24 小时。有核酸码不能准时审核通过的风险。");
+                    }
+                }
+                else
+                {
+                    AddMessage("出发机场未知，无法判定核酸报告时间情况。");
                 }
             }
             else
