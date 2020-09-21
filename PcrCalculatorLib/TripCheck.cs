@@ -545,6 +545,9 @@ namespace PcrCalculatorLib
             if (BaggageCount == 0)
                 return;
 
+            if (Segments.Count > 1)
+                AddMessage("注意本工具的直挂结果并不代表起飞地勤会操作 / 愿意，特别是小机场起飞的机场。");
+
             if (BaggageCount >= 3)
                 AddMessage("请注意 3+ 行李的超额行李费。");
 

@@ -7,7 +7,7 @@
 <hr>
 <div class="alert alert-secondary mt-4" role="alert">
     <span class="oi oi-warning mr-2" aria-hidden="true"></span>
-    <strong>本工具仅供参考</strong>
+    <strong>本工具仅供参考，可能会由于政策时常变化、核酸码审核地领事馆特殊政策等产生不同的结果。</strong>
 
     <span class="text-nowrap">
         使用前请务必查看
@@ -19,7 +19,7 @@
     </span>
     页面。
 </div>
-<label for="timeZone">检测地时区</label>
+<label for="timeZone">检测地时区（非夏令时时间）</label>
 <select id="timeZone" @bind="@selectedTimeZone">
     @for (int i = 0; i < _timezones.Length; i++)
     {
