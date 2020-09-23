@@ -3,11 +3,12 @@
 @using PcrCalculatorLib
 @using TimeZoneNames
 
-<h1>行程规划（美国出发简易版）</h1>
+<h1>行程规划</h1>
+<h2>美国出发简易版</h2>
 <hr>
 <div class="alert alert-secondary mt-4" role="alert">
     <span class="oi oi-warning mr-2" aria-hidden="true"></span>
-    <strong>本工具仅供参考，可能会由于政策时常变化、核酸码审核地领事馆特殊政策等产生不同的结果。</strong>
+    <strong>本工具仅供参考，可能会由于政策时常变化、核酸码审核地领事馆特殊政策等产生不同的结果。本工具不检测航班是否存在、转机签证要求等内容，仅在假设上述因素均无问题时计算应该取得报告的时间。</strong>
 
     <span class="text-nowrap">
         使用前请务必查看
@@ -21,7 +22,11 @@
 </div>
 <br>
 <br>
-    <p>最终回国航班（比如 底特律-东京-上海，则填写 东京与东京当地的出发时间 段，比如 洛杉矶-广州，则填写 洛杉矶与洛杉矶当地的出发时间 段）：</p>
+    <p>请输入最终回国航班信息</p>
+    <p>示例一（美国-第三国-中国）：底特律-首尔-上海，则填写首尔与首尔当地的出发日期时间</p>
+    <p>示例二（美国-中国）：洛杉矶-广州，则填写洛杉矶与洛杉矶当地的出发日期时间</p>
+    <p>示例三（美国-美国-中国）：底特律-洛杉矶-广州，则填写洛杉矶与洛杉矶当地的出发日期时间</p>
+    <p>示例四（美国-美国-第三国-第三国-中国）：纽约肯尼迪-底特律-墨西哥城-首尔-广州，则填写首尔与首尔当地的出发日期时间</p>
 
         <hr>
         <label for=@("deptAirport")>出发机场</label>
@@ -39,8 +44,6 @@
         <br>
         <br>
 
-    <hr>
-    <br>
     <br>
     <button class="btn btn-primary" @onclick="getResult">显示结果</button>
     <br>
@@ -71,16 +74,17 @@
 
     void getResult()
     {
-        if(string.IsNullOrEmpty(deptAirport) || !deptTime.HasValue)
+        if(!deptTime.HasValue)
         {
-            result = new List<string>() { "输入数据不正确。" };
+            result = new List<string>() { "请输入最终回国航班的起飞日期时间（起飞地时区）" };
             return;
         }
 
         result = new List<string>();
         resultState = "";
+        string checkedAirport = string.IsNullOrEmpty(deptAirport) ? "0" : deptAirport;
         var trip = new TripCheck();
-        AddSegment(trip, deptAirport, deptTime.Value);
+        AddSegment(trip, checkedAirport, deptTime.Value);
 
         trip.CheckSimple();
         result = trip.Messages;
@@ -92,6 +96,6 @@
 
         departTime = DateTime.SpecifyKind(departTime, DateTimeKind.Unspecified);
 
-        trip.SetSegmentSimple((String.IsNullOrEmpty(departAirport) || departAirport == "0") ? "?" : AirportDataset.Airports[Int32.Parse(departAirport)].Code, departTime);
+        trip.SetSegmentSimple(AirportDataset.Airports[Int32.Parse(departAirport)].Code, departTime);
     }
 }

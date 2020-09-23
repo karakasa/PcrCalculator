@@ -587,16 +587,16 @@ namespace PcrCalculatorLib
                 return;
 
             if (Segments.Count > 1)
-                AddMessage("识别为包含转机的行程。");
+                AddMessage("识别为包含国际转机的行程。");
 
             PcrTimezone = WestCoastTimeZone;
 
-            CheckTransfersSimple();
-            if (Status == RouteStatus.Invalid)
-                return;
+            //CheckTransfersSimple();
+            //if (Status == RouteStatus.Invalid)
+            //    return;
 
             CheckPCRRequirementSimple();
-            CheckPCRReportRequirement();
+            //CheckPCRReportRequirement();
         }
         public void SetSegmentSimple(string airport, DateTime departureTime)
         {
@@ -718,7 +718,7 @@ namespace PcrCalculatorLib
             }
             else
             {
-                AddMessage("请使用高级版本积算结果。");
+                AddMessage("请使用高级版本计算结果。");
             }
         }
         private void CheckPCRRequirement()
