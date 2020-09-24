@@ -697,7 +697,7 @@ namespace PcrCalculatorLib
             var testTimezone = WestCoastTimeZone;
 
             var it = Segments.Last();
-            if (AirportDataset.TryGetAirport(it.DepartureAirport, out var airport) 
+            if (AirportDataset.TryGetAirportSimple(it.DepartureAirport, out var airport) 
                 && airport.PCRInAdvance != -1 && airport.StartTime <= it.LocalDepartureTime)
             {
                 var airportTimeInLocal = TimeZoneInfo.ConvertTime(it.LocalDepartureTime, airport.TimeZone, testTimezone);

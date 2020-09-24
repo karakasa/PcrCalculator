@@ -65,9 +65,9 @@
     {
         get
         {
-            if (AirportDataset.AirportNames == null)
-                AirportDataset.LoadData();
-            return AirportDataset.AirportNames;
+            if (AirportDataset.AirportNamesSimple == null)
+                AirportDataset.LoadDataSimple();
+            return AirportDataset.AirportNamesSimple;
         }
     }
 
@@ -96,6 +96,6 @@
 
         departTime = DateTime.SpecifyKind(departTime, DateTimeKind.Unspecified);
 
-        trip.SetSegmentSimple(AirportDataset.Airports[Int32.Parse(departAirport)].Code, departTime);
+        trip.SetSegmentSimple(AirportDataset.AirportsSimple[Int32.Parse(departAirport)].Code, departTime);
     }
 }

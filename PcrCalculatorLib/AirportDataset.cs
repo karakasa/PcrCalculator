@@ -20,6 +20,9 @@ namespace PcrCalculatorLib
     {
         public static List<Airport> Airports = new List<Airport>();
         public static string[] AirportNames;
+        public static List<Airport> AirportsSimple = new List<Airport>();
+        public static string[] AirportNamesSimple;
+        public static string[] HiddenAirportInSimpleMode = new string[] { "CJU", "BKK", "TPE", "HKG" };
 
         public static readonly DateTime DefaultTime = new DateTime(2020, 1, 1, 0, 0, 1);
         static AirportDataset()
@@ -54,6 +57,38 @@ namespace PcrCalculatorLib
             }
         }
 
+        public static void LoadDataSimple()
+        {
+            foreach (var it in PcrData.PCR.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Skip(1))
+            {
+                var content = it.Split(',');
+                foreach (var it2 in content[1].Split('/'))
+                {
+                    if (HiddenAirportInSimpleMode.Contains(it2))
+                    {
+                        continue;
+                    }
+                    AirportsSimple.Add(new Airport()
+                    {
+                        CountryName = content[0],
+                        Code = it2,
+                        FriendlyName = content[2],
+                        TimeZone = TZConvert.GetTimeZoneInfo(content[3]),
+                        PCRInAdvance = int.TryParse(content[4], out var advance) ? advance : -1,
+                        StartTime = content[5].Contains('/') ? GetStartTime(content[5]) : DefaultTime
+                    });
+                }
+            }
+
+            AirportsSimple = AirportsSimple.OrderBy(a => a.CountryName != "美国").ThenBy(a => a.CountryName).ThenBy(a => a.Code).ToList();
+
+            AirportNamesSimple = new string[AirportsSimple.Count];
+            for (var i = 0; i < AirportsSimple.Count; i++)
+            {
+                AirportNamesSimple[i] = $"{AirportsSimple[i].Code} {AirportsSimple[i].CountryName} {AirportsSimple[i].FriendlyName}";
+            }
+        }
+
         private static DateTime GetStartTime(string str)
         {
             var month = int.Parse(str.Substring(0, str.IndexOf('/')));
@@ -67,6 +102,19 @@ namespace PcrCalculatorLib
                 if (Airports[i].Code == name)
                 {
                     info = Airports[i];
+                    return true;
+                }
+
+            info = default;
+            return false;
+        }
+
+        public static bool TryGetAirportSimple(string name, out Airport info)
+        {
+            for (var i = 0; i < AirportsSimple.Count; i++)
+                if (AirportsSimple[i].Code == name)
+                {
+                    info = AirportsSimple[i];
                     return true;
                 }
 
