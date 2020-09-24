@@ -22,7 +22,7 @@ namespace PcrCalculatorLib
         public static string[] AirportNames;
         public static List<Airport> AirportsSimple = new List<Airport>();
         public static string[] AirportNamesSimple;
-        public static string[] HiddenAirportInSimpleMode = new string[] { "CJU", "BKK", "TPE", "HKG" };
+        public static string[] HiddenAirportInSimpleMode = new string[] { "CJU", "BKK", "TPE", "HKG", "SLC", "IKA", "JNB", "KGL", "DEL", "BEG", "HND", "KOS", "SYD", "NBO", "MNL", "HAN" };
 
         public static readonly DateTime DefaultTime = new DateTime(2020, 1, 1, 0, 0, 1);
         static AirportDataset()
@@ -80,7 +80,7 @@ namespace PcrCalculatorLib
                 }
             }
 
-            AirportsSimple = AirportsSimple.OrderBy(a => a.CountryName != "美国").ThenBy(a => a.CountryName).ThenBy(a => a.Code).ToList();
+            AirportsSimple = AirportsSimple.OrderBy(a => a.CountryName != "美国").ThenBy(a => a.CountryName != "加拿大").ThenBy(a => a.CountryName != "墨西哥").ThenBy(a => a.CountryName != "日本").ThenBy(a => a.CountryName != "韩国").ThenBy(a => a.CountryName).ThenBy(a => a.Code).ToList();
 
             AirportNamesSimple = new string[AirportsSimple.Count];
             for (var i = 0; i < AirportsSimple.Count; i++)
