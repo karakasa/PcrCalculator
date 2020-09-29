@@ -81,5 +81,16 @@ namespace PcrCalculatorLib {
                 return ResourceManager.GetString("PCR", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 阿联酋
+        ///乌兹别克斯坦
+        ///尼日利亚.
+        /// </summary>
+        public static string UseSampleData {
+            get {
+                return ResourceManager.GetString("UseSampleData", resourceCulture);
+            }
+        }
     }
 }

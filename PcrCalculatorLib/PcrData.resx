@@ -179,4 +179,9 @@
 南非,JNB,约翰内斯堡,South Africa Standard Time,3,Y
 印度,DEL,新德里,India Standard Time,3,Y</value>
   </data>
+  <data name="UseSampleData" xml:space="preserve">
+    <value>阿联酋
+乌兹别克斯坦
+尼日利亚</value>
+  </data>
 </root>
