@@ -31,7 +31,7 @@ namespace PcrCalculatorLib
         {
         }
 
-        public static void LoadData()
+        private static Dictionary<string, DateTime> GetSampleDateRequirement()
         {
             var useSampleDate = new Dictionary<string, DateTime>();
 
@@ -47,6 +47,12 @@ namespace PcrCalculatorLib
                     useSampleDate[content[0]] = content[1].Contains('/') ? GetStartTime(content[1]) : DefaultTime;
                 }
             }
+
+            return useSampleDate;
+        }
+        public static void LoadData()
+        {
+            var useSampleDate = GetSampleDateRequirement();
 
             foreach (var it in PcrData.PCR.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Skip(1))
             {
@@ -80,6 +86,8 @@ namespace PcrCalculatorLib
 
         public static void LoadDataSimple()
         {
+            var useSampleDate = GetSampleDateRequirement();
+
             foreach (var it in PcrData.PCR.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Skip(1))
             {
                 var content = it.Split(',');
@@ -89,6 +97,9 @@ namespace PcrCalculatorLib
                     {
                         continue;
                     }
+
+                    var sampleDateInstead = useSampleDate.TryGetValue(content[0], out var date);
+
                     AirportsSimple.Add(new Airport()
                     {
                         CountryName = content[0],
@@ -96,7 +107,9 @@ namespace PcrCalculatorLib
                         FriendlyName = content[2],
                         TimeZone = TZConvert.GetTimeZoneInfo(content[3]),
                         PCRInAdvance = int.TryParse(content[4], out var advance) ? advance : -1,
-                        StartTime = content[5].Contains('/') ? GetStartTime(content[5]) : DefaultTime
+                        StartTime = content[5].Contains('/') ? GetStartTime(content[5]) : DefaultTime,
+                        UseSampleDateInstead = sampleDateInstead,
+                        UseSampleDateStartTime = sampleDateInstead ? date : DefaultTime
                     });
                 }
             }
