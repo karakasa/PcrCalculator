@@ -223,6 +223,71 @@ namespace PcrCalculatorLib
             AdditionalDocument();
         }
         private static bool IsCanadaAirport(string code) => code == "YVR" || code == "YYZ" || code == "YUL";
+        private void CheckTransfersSimple()
+        {
+            foreach (var it in GetTransfers())
+                CheckTransferSimple(it);
+        }
+        private void CheckTransferSimple(Transfer transfer)
+        {
+            var specialTransferTime = false;
+
+            switch (transfer.Airport)
+            {
+                case "YUL":
+                case "SVO":
+                case "HKG":
+                case "HND":
+                case "SIN":
+                case "BKK":
+                case "AKL":
+                case "SYD":
+                case "TPE":
+                case "TSA":
+                    InvalidRoute();
+                    AddMessage("不可在该机场转机。");
+                    break;
+                case "YVR":
+                case "YYZ":
+                    AddMessage("您的整体行程需要满足 China Transit Program。请使用高级版或者查询相关资料。");
+                    break;
+                case "LHR":
+                    RequireVisa("有效美国/加拿大/英国签证");
+                    break;
+                case "MNL":
+                    AddMessage("菲律宾有可能不能转机。");
+                    SuspiciousRoute();
+                    break;
+                case "PNH":
+                case "KOS":
+                    RequireVisa("柬埔寨商务签");
+                    break;
+                case "LIS":
+                    AddMessage("如果是葡萄牙航空转首都航空，托运行李请咨询首都航空工作人员，有可能不能直挂。");
+                    break;
+                case "NRT":
+                case "KIX":
+                case "ADD":
+                    AddMessage("请注意转机需要在同一日内。（非 24 小时内）即前一半航班的降落时间和后一半航班的起飞时间在当地同一天。");
+                    specialTransferTime = true;
+                    break;
+                case "RUH":
+                    AddMessage("利亚德转机需要在 6 小时内。");
+                    specialTransferTime = true;
+                    break;
+                case "AUH":
+                    AddMessage("转机需要在 6 小时内，并且需要是联程票（一张票，而非分开预订的票）。");
+                    specialTransferTime = true;
+                    break;
+                case "KUL":
+                    AddMessage("转机需要在 48 小时内。");
+                    specialTransferTime = true;
+                    break;
+            }
+
+            if (!specialTransferTime && Status != RouteStatus.Invalid)
+                AddMessage("除非特别说明的情况，否则转机需要在 24 小时内");
+        }
         private void CheckTransfers()
         {
             var transfers = GetTransfers().ToArray();
@@ -395,6 +460,7 @@ namespace PcrCalculatorLib
                         AddMessage("不满足香港转机要求。");
                     }
                     break;
+                
             }
         }
 
@@ -487,6 +553,12 @@ namespace PcrCalculatorLib
                 }
             }
         }
+        private void CheckDomesticRegulations()
+        {
+            var msg = DomesticDataset.GetDestinationRegulation(EntryPoint, FinalDestination);
+            if (!string.IsNullOrEmpty(msg))
+                AddMessage(msg);
+        }
 
         public List<string> Messages = new List<string>();
         public void Check()
@@ -507,9 +579,45 @@ namespace PcrCalculatorLib
             CheckSchengenTransfer();
             CheckOtherDomesticTransfer();
             CheckLastDeparture();
-            var msg = DomesticDataset.GetDestinationRegulation(EntryPoint, FinalDestination);
-            if (!string.IsNullOrEmpty(msg))
-                AddMessage(msg);
+            CheckDomesticRegulations();
+        }
+        public void CheckSimple()
+        {
+            if (Segments.Count == 0)
+                return;
+
+            if (Segments.Count > 1)
+                AddMessage("识别为包含国际转机的行程。");
+
+            PcrTimezone = WestCoastTimeZone;
+
+            //CheckTransfersSimple();
+            //if (Status == RouteStatus.Invalid)
+            //    return;
+
+            CheckPCRRequirementSimple();
+            //CheckPCRReportRequirement();
+        }
+        public void SetSegmentSimple(string airport, DateTime departureTime)
+        {
+            if (!AirportInUS.Contains(airport))
+            {
+                Segments.Add(new Segment()
+                {
+                    DepartureAirport = "LAX",
+                    AirlineCode = "??",
+                    LocalDepartureTime = departureTime,
+                    LocalArrivalTime = departureTime
+                });
+            }
+
+            Segments.Add(new Segment()
+            {
+                DepartureAirport = airport,
+                AirlineCode = "??",
+                LocalDepartureTime = departureTime,
+                LocalArrivalTime = departureTime
+            });
         }
 
         private void CheckPCRReportRequirement()
@@ -545,6 +653,9 @@ namespace PcrCalculatorLib
             if (BaggageCount == 0)
                 return;
 
+            if (Segments.Count > 1)
+                AddMessage("注意本工具的直挂结果并不代表起飞地勤会操作 / 愿意，特别是小机场起飞的机场。");
+
             if (BaggageCount >= 3)
                 AddMessage("请注意 3+ 行李的超额行李费。");
 
@@ -579,6 +690,37 @@ namespace PcrCalculatorLib
         public int BaggageCount = 0;
         private static readonly TimeZoneInfo WestCoastTimeZone = TimeZoneConverter.TZConvert.GetTimeZoneInfo("Pacific Standard Time");
 
+        private void CheckPCRRequirementSimple()
+        {
+            var required = false;
+            var earliestSubmitTime = new DateTime(2020, 1, 1, 0, 0, 1);
+            var testTimezone = WestCoastTimeZone;
+
+            var it = Segments.Last();
+            if (AirportDataset.TryGetAirportSimple(it.DepartureAirport, out var airport) 
+                && airport.PCRInAdvance != -1 && airport.StartTime <= it.LocalDepartureTime)
+            {
+                var airportTimeInLocal = TimeZoneInfo.ConvertTime(it.LocalDepartureTime, airport.TimeZone, testTimezone);
+                var pcrTimeInLocal = airportTimeInLocal - new TimeSpan(airport.PCRInAdvance, 0, 0, 0);
+                var earliestTime = new DateTime(pcrTimeInLocal.Year, pcrTimeInLocal.Month, pcrTimeInLocal.Day, 0, 1, 0);
+
+                if (earliestTime > earliestSubmitTime)
+                {
+                    required = true;
+                    earliestSubmitTime = earliestTime;
+                }
+            }
+
+            if (required)
+            {
+                AddMessage("核酸码需要报告出具当地时间为 " + earliestSubmitTime.ToString("yyyy/MM/dd") + " 及以后的报告。");
+                AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。");
+            }
+            else
+            {
+                AddMessage("请使用高级版本计算结果。");
+            }
+        }
         private void CheckPCRRequirement()
         {
             if (Segments.Count == 1 
@@ -616,7 +758,7 @@ namespace PcrCalculatorLib
             }
 
             if (required)
-            { 
+            {
                 if (AirportInUS.Contains(Segments[0].DepartureAirport) && Segments[0].LocalDepartureTime < new DateTime(2020, 9, 15, 0, 0, 0))
                 {
                     AddMessage("2020/09/15 前美国始发颁发的 5 日核酸码只要有效，就可以在 3 日核酸码地区转机。但是部分机场（比如韩国）可能会额外要求 3 日内核酸报告。");
