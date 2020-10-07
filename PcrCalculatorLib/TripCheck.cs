@@ -768,7 +768,7 @@ namespace PcrCalculatorLib
                 }
                 else
                 {
-                    if (earliestTime > earliestSubmitTime)
+                    if (earliestTime > earliestSubmitTime || countryRequireSampleDate)
                     {
                         required = true;
                         earliestSubmitTime = earliestTime;
