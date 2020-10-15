@@ -85,7 +85,13 @@ namespace PcrCalculatorLib {
         /// <summary>
         ///   Looks up a localized string similar to 阿联酋
         ///乌兹别克斯坦
-        ///尼日利亚.
+        ///尼日利亚
+        ///菲律宾
+        ///新加坡
+        ///沙特阿拉伯
+        ///印度尼西亚
+        ///塔吉克斯坦
+        ///埃塞俄比亚.
         /// </summary>
         public static string UseSampleData {
             get {
