@@ -719,11 +719,11 @@ namespace PcrCalculatorLib
                 var dateType = requireSampleDate ? "采样日期" : "报告出具日期";
 
                 AddMessage("核酸码需要 " + dateType + " 为当地时间 " + earliestSubmitTime.ToString("yyyy/MM/dd") + " 及以后的报告。");
-                AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。");
+                AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。请注意部分领事馆（如芝加哥）未按文字规定执行时差及相关规定，有可能无论中转地都需要字面日期减 3 的报告。");
             }
             else
             {
-                AddMessage("转机国家不需要核酸码，请使用高级版本计算结果，或改为选择美国出发，并填写离开美国那班航班的信息。");
+                AddMessage("最终出发国家不需要核酸码，请使用高级版本计算结果，或改为选择美国出发，并填写离开美国那班航班的信息。");
             }
         }
         private void CheckPCRRequirement()
@@ -780,17 +780,12 @@ namespace PcrCalculatorLib
 
             if (required)
             {
-                if (AirportInUS.Contains(Segments[0].DepartureAirport) && Segments[0].LocalDepartureTime < new DateTime(2020, 9, 15, 0, 0, 0))
-                {
-                    AddMessage("2020/09/15 前美国始发颁发的 5 日核酸码只要有效，就可以在 3 日核酸码地区转机。但是部分机场（比如韩国）可能会额外要求 3 日内核酸报告。");
-                }
-
                 var dateType = requireSampleDate ? "采样日期" : "报告出具日期";
 
                 AddMessage("核酸码需要 " + dateType + " 为当地时间 " + earliestSubmitTime.ToString("yyyy/MM/dd") + " 及以后的报告。");
                 if (isUsOrigin)
                 {
-                    AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。");
+                    AddMessage("请注意，美国始发核酸报告出具时间会统一视作美西时间。请注意部分领事馆（如芝加哥）未按文字规定执行时差及相关规定，有可能无论中转地都需要字面日期减 3 的报告。");
                 }
 
                 if (hasOriginAirport)
